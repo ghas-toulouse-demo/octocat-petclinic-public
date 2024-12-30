@@ -18,8 +18,12 @@ import java.util.Map;
 @RequestMapping("/api")
 public class ApiController {
 
+	private final ApiService apiService;
+
 	@Autowired
-	private ApiService apiService;
+	public ApiController(ApiService apiService) {
+		this.apiService = apiService;
+	}
 
 	/**
 	 * Retrieves the sound of a given animal.

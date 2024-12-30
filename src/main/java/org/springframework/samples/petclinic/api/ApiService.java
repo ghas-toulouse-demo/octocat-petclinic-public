@@ -14,8 +14,12 @@ import java.util.Map;
 @Service
 public class ApiService {
 
+	private final JdbcTemplate jdbcTemplate;
+
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	public ApiService(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
 
 	/**
 	 * Retrieves the sound of a given animal.
