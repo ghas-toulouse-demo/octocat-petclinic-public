@@ -1,0 +1,15 @@
+# Dependency Review Workflow
+#
+# Use Reusable workflow from the Security Office
+#
+
+name: 'Dependency Review'
+on: [pull_request]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  dependency-review:
+    uses: ghas-toulouse-demo/security-office/.github/workflows/security-dependency-review.yml@main
