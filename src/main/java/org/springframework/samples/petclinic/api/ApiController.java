@@ -23,8 +23,12 @@ public class ApiController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ApiController.class);
 
+	private final ApiService apiService;
+
 	@Autowired
-	private ApiService apiService;
+	public ApiController(ApiService apiService) {
+		this.apiService = apiService;
+	}
 
 	/**
 	 * Récupère le son d'un animal donné.

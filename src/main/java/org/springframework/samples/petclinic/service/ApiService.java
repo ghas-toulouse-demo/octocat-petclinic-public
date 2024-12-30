@@ -15,8 +15,12 @@ public class ApiService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ApiService.class);
 
+	private final JdbcTemplate jdbcTemplate;
+
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	public ApiService(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
 
 	/**
 	 * Récupère le son d'un animal donné.
