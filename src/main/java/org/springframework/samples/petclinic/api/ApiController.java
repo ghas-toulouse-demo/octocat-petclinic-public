@@ -5,7 +5,6 @@
 package org.springframework.samples.petclinic.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.samples.petclinic.owner.Owner;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,54 +19,44 @@ import java.util.Map;
 public class ApiController {
 
 	@Autowired
-	JdbcTemplate jdbcTemplate;
+	private ApiService apiService;
 
-	@RequestMapping(value = "/animalSound/{animal}", produces = "application/json")
-	@GetMapping
+	/**
+	 * Retrieves the sound of a given animal.
+	 * @param animal the name of the animal
+	 * @return the sound of the animal
+	 */
+	@GetMapping("/animalSound/{animal}")
 	public String getSound(@PathVariable String animal) {
-		if (animal == null) {
-			System.out.println("Oops! A null animal?");
-		}
-		else if (animal.equalsIgnoreCase("Dog")) {
-			System.out.println("Dog");
-			return "Bark";
-		}
-		else if (animal.equalsIgnoreCase("Cat")) {
-			return "Meow";
-		}
-		else if (animal.equalsIgnoreCase("Bird")) {
-			return "Tweet";
-		}
-		return "Unknown";
+		return apiService.getAnimalSound(animal);
 	}
 
 	/**
 	 * Retrieves a list of owners from the database.
 	 * @return A list of Owner objects representing the owners.
 	 */
-	@RequestMapping(value = "/owners", produces = "application/json")
+	@GetMapping("/owners")
 	public List<Owner> getOwners() {
-		List<Owner> ownerList = jdbcTemplate.query("select id, first_name, last_name from owners", (rs, rowNum) -> {
-			Owner o = new Owner();
-			o.setId(rs.getInt("id"));
-			o.setFirstName(rs.getString("first_name"));
-			o.setLastName(rs.getString("last_name"));
-			return o;
-		}).stream().toList();
-		return ownerList;
+		return apiService.getOwners();
 	}
 
-	@RequestMapping(value = "/pets", produces = "application/json")
+	/**
+	 * Retrieves a list of pets from the database.
+	 * @return A list of maps representing the pets.
+	 */
+	@GetMapping("/pets")
 	public List<Map<String, Object>> getPets() {
-		List<Map<String, Object>> pets = jdbcTemplate.queryForList("select id, name, birth_date from pets ");
-		return pets;
+		return apiService.getPets();
 	}
 
-	@RequestMapping(value = "/pets/{name}", produces = "application/json")
+	/**
+	 * Retrieves a list of pets by their name from the database.
+	 * @param name the name of the pet
+	 * @return A list of maps representing the pets with the given name.
+	 */
+	@GetMapping("/pets/{name}")
 	public List<Map<String, Object>> getPetsByName(@PathVariable("name") String name) {
-		List<Map<String, Object>> pets = jdbcTemplate
-				.queryForList("select id, name, birth_date from pets where name = '" + name + "' ");
-		return pets;
+		return apiService.getPetsByName(name);
 	}
 
 }
