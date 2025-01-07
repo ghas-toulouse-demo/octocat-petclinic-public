@@ -27,8 +27,7 @@ public class ApiController {
 	 * @param animal Le nom de l'animal.
 	 * @return Le son de l'animal.
 	 */
-	@RequestMapping(value = "/animalSound/{animal}", produces = "application/json")
-	@GetMapping
+	@GetMapping(value = "/animalSound/{animal}", produces = "application/json")
 	public String getSound(@PathVariable String animal) {
 		if (animal == null) {
 			System.out.println("Oops! Un animal null?");
@@ -50,7 +49,7 @@ public class ApiController {
 	 * Récupère une liste de propriétaires depuis la base de données.
 	 * @return Une liste d'objets Owner représentant les propriétaires.
 	 */
-	@RequestMapping(value = "/owners", produces = "application/json")
+	@GetMapping(value = "/owners", produces = "application/json")
 	public List<Owner> getOwners() {
 		return apiService.getOwners();
 	}
@@ -59,7 +58,7 @@ public class ApiController {
 	 * Récupère une liste d'animaux de compagnie depuis la base de données.
 	 * @return Une liste de Map représentant les animaux de compagnie.
 	 */
-	@RequestMapping(value = "/pets", produces = "application/json")
+	@GetMapping(value = "/pets", produces = "application/json")
 	public List<Map<String, Object>> getPets() {
 		return apiService.getPets();
 	}
@@ -69,7 +68,7 @@ public class ApiController {
 	 * @param name Le nom de l'animal de compagnie.
 	 * @return Une liste de Map représentant les animaux de compagnie.
 	 */
-	@RequestMapping(value = "/pets/{name}", produces = "application/json")
+	@GetMapping(value = "/pets/{name}", produces = "application/json")
 	public List<Map<String, Object>> getPetsByName(@PathVariable("name") String name) {
 		return apiService.getPetsByName(name);
 	}
