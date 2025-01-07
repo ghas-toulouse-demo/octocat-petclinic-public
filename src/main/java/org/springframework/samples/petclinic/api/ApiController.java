@@ -1,12 +1,12 @@
 /**
- * This class represents the API controller for the Pet Clinic application.
- * It handles requests related to owners and pets.
+ * Cette classe représente le contrôleur API pour l'application Pet Clinic.
+ * Elle gère les requêtes liées aux propriétaires et aux animaux de compagnie.
  */
 package org.springframework.samples.petclinic.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.samples.petclinic.owner.Owner;
+import org.springframework.samples.petclinic.service.ApiService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,13 +20,18 @@ import java.util.Map;
 public class ApiController {
 
 	@Autowired
-	JdbcTemplate jdbcTemplate;
+	ApiService apiService;
 
+	/**
+	 * Récupère le son d'un animal donné.
+	 * @param animal Le nom de l'animal.
+	 * @return Le son de l'animal.
+	 */
 	@RequestMapping(value = "/animalSound/{animal}", produces = "application/json")
 	@GetMapping
 	public String getSound(@PathVariable String animal) {
 		if (animal == null) {
-			System.out.println("Oops! A null animal?");
+			System.out.println("Oops! Un animal null?");
 		}
 		else if (animal.equalsIgnoreCase("Dog")) {
 			System.out.println("Dog");
@@ -42,32 +47,31 @@ public class ApiController {
 	}
 
 	/**
-	 * Retrieves a list of owners from the database.
-	 * @return A list of Owner objects representing the owners.
+	 * Récupère une liste de propriétaires depuis la base de données.
+	 * @return Une liste d'objets Owner représentant les propriétaires.
 	 */
 	@RequestMapping(value = "/owners", produces = "application/json")
 	public List<Owner> getOwners() {
-		List<Owner> ownerList = jdbcTemplate.query("select id, first_name, last_name from owners", (rs, rowNum) -> {
-			Owner o = new Owner();
-			o.setId(rs.getInt("id"));
-			o.setFirstName(rs.getString("first_name"));
-			o.setLastName(rs.getString("last_name"));
-			return o;
-		}).stream().toList();
-		return ownerList;
+		return apiService.getOwners();
 	}
 
+	/**
+	 * Récupère une liste d'animaux de compagnie depuis la base de données.
+	 * @return Une liste de Map représentant les animaux de compagnie.
+	 */
 	@RequestMapping(value = "/pets", produces = "application/json")
 	public List<Map<String, Object>> getPets() {
-		List<Map<String, Object>> pets = jdbcTemplate.queryForList("select id, name, birth_date from pets ");
-		return pets;
+		return apiService.getPets();
 	}
 
+	/**
+	 * Récupère une liste d'animaux de compagnie par nom depuis la base de données.
+	 * @param name Le nom de l'animal de compagnie.
+	 * @return Une liste de Map représentant les animaux de compagnie.
+	 */
 	@RequestMapping(value = "/pets/{name}", produces = "application/json")
 	public List<Map<String, Object>> getPetsByName(@PathVariable("name") String name) {
-		List<Map<String, Object>> pets = jdbcTemplate
-				.queryForList("select id, name, birth_date from pets where name = '" + name + "' ");
-		return pets;
+		return apiService.getPetsByName(name);
 	}
 
 }
