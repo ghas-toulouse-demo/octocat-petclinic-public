@@ -49,7 +49,9 @@ public class ApiService {
 	 */
 	public List<Map<String, Object>> getPetsByName(String name) {
 		// CVE-2021-44228: Prevent SQL Injection by using parameterized queries
-		List<Map<String, Object>> pets = jdbcTemplate.queryForList("select id, name, birth_date from pets where name = ?", name);
+		List<Map<String, Object>> pets = jdbcTemplate
+				.queryForList("select id, name, birth_date from pets where name = ?", name);
 		return pets;
 	}
+
 }

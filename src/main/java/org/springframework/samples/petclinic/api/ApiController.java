@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -18,8 +20,14 @@ import java.util.Map;
 @RequestMapping("/api")
 public class ApiController {
 
+	private final ApiService apiService;
+
+	private static final Logger logger = LoggerFactory.getLogger(ApiController.class);
+
 	@Autowired
-	private ApiService apiService;
+	public ApiController(ApiService apiService) {
+		this.apiService = apiService;
+	}
 
 	/**
 	 * Récupère le son d'un animal donné.
@@ -29,10 +37,10 @@ public class ApiController {
 	@GetMapping(value = "/animalSound/{animal}", produces = "application/json")
 	public String getSound(@PathVariable String animal) {
 		if (animal == null) {
-			System.out.println("Oops! Un animal null?");
+			logger.warn("Oops! Un animal null?");
 		}
 		else if (animal.equalsIgnoreCase("Dog")) {
-			System.out.println("Dog");
+			logger.info("Dog");
 			return "Bark";
 		}
 		else if (animal.equalsIgnoreCase("Cat")) {
@@ -71,4 +79,5 @@ public class ApiController {
 	public List<Map<String, Object>> getPetsByName(@PathVariable("name") String name) {
 		return apiService.getPetsByName(name);
 	}
+
 }
