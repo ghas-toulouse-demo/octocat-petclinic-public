@@ -242,10 +242,10 @@ jobs:
         kubectl create namespace petclinic-public-${{ steps.extract_branch.outputs.branch }} --dry-run=client -o json | kubectl apply -f -                 
         sed -i "s/:main/:${{ steps.extract_branch.outputs.branch }}/g" kubernetes/deployment.yml 
         kubectl apply -n  petclinic-public-${{ steps.extract_branch.outputs.branch }} -f kubernetes/deployment.yml
-        kubectl -n  petclinic-public-${{ steps.extract_branch.outputs.branch }} rollout restart deployment octocat-petclinic
+        kubectl -n  petclinic-public-${{ steps.extract_branch.outputs.branch }} rollout restart deployment octocat-petclinic-public
         echo "🕚  - Wait 20s for service deployment"
         sleep 15s
-        IP_SERVICE=$(kubectl get services -n petclinic-public-${{ steps.extract_branch.outputs.branch }}  -o json | jq -r '.items[] |  select(.metadata.name == "octocat-petclinic-service") | .status.loadBalancer? .ingress[]?|.ip ')
+        IP_SERVICE=$(kubectl get services -n petclinic-public-${{ steps.extract_branch.outputs.branch }}  -o json | jq -r '.items[] |  select(.metadata.name == "octocat-petclinic-public-service") | .status.loadBalancer? .ingress[]?|.ip ')
         echo "IP_SERVICE=$IP_SERVICE" >> $GITHUB_ENV
-        echo "🏁 - Service ${{ github.repository }} update in petclinic : http://$IP_SERVICE:8080 "
+        echo "🏁 - Service ${{ github.repository }} update in petclinic-publicfio : http://$IP_SERVICE:8080 "
         echo "::set-output name=service-url::http://$IP_SERVICE:8080"   
