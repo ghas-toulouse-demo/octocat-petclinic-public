@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -19,17 +21,23 @@ import java.util.Map;
 @RequestMapping("/api")
 public class ApiController {
 
+	private static final Logger logger = LoggerFactory.getLogger(ApiController.class);
+
+	private final JdbcTemplate jdbcTemplate;
+
 	@Autowired
-	JdbcTemplate jdbcTemplate;
+	public ApiController(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
 
 	@RequestMapping(value = "/animalSound/{animal}", produces = "application/json")
 	@GetMapping
 	public String getSound(@PathVariable String animal) {
 		if (animal == null) {
-			System.out.println("Oops! A null animal?");
+			logger.info("Oops! A null animal?");
 		}
 		else if (animal.equalsIgnoreCase("Dog")) {
-			System.out.println("Dog");
+			logger.info("Dog");
 			return "Bark";
 		}
 		else if (animal.equalsIgnoreCase("Cat")) {
@@ -47,27 +55,24 @@ public class ApiController {
 	 */
 	@RequestMapping(value = "/owners", produces = "application/json")
 	public List<Owner> getOwners() {
-		List<Owner> ownerList = jdbcTemplate.query("select id, first_name, last_name from owners", (rs, rowNum) -> {
+		return jdbcTemplate.query("select id, first_name, last_name from owners", (rs, rowNum) -> {
 			Owner o = new Owner();
 			o.setId(rs.getInt("id"));
 			o.setFirstName(rs.getString("first_name"));
 			o.setLastName(rs.getString("last_name"));
 			return o;
 		}).stream().toList();
-		return ownerList;
 	}
 
 	@RequestMapping(value = "/pets", produces = "application/json")
 	public List<Map<String, Object>> getPets() {
-		List<Map<String, Object>> pets = jdbcTemplate.queryForList("select id, name, birth_date from pets ");
-		return pets;
+		return jdbcTemplate.queryForList("select id, name, birth_date from pets");
 	}
 
 	@RequestMapping(value = "/pets/{name}", produces = "application/json")
 	public List<Map<String, Object>> getPetsByName(@PathVariable("name") String name) {
-		List<Map<String, Object>> pets = jdbcTemplate
-				.queryForList("select id, name, birth_date from pets where name = '" + name + "' ");
-		return pets;
+		String sql = "select id, name, birth_date from pets where name = ?";
+		return jdbcTemplate.queryForList(sql, new Object[] { name });
 	}
 
 }
