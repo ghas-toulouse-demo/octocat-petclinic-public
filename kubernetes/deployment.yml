@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: octocat-petclinic-public
+spec:
+  selector:
+    matchLabels:
+      app: octocat-petclinic-public
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: octocat-petclinic-public
+    spec:
+      containers:
+      - name: octocat-petclinic
+        image: ghcr.io/ghas-toulouse-demo/octocat-petclinic-public:main
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: octocat-petclinic-public
+spec:
+  type: LoadBalancer
+  selector:
+    app: octocat-petclinic-public
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
