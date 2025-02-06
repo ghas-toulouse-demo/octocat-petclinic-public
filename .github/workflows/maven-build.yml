@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Define Build Parameters
         id: build_params
@@ -58,7 +58,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Set up JDK ${{matrix.java}}
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{matrix.java}}
           distribution: 'adopt'
@@ -83,7 +83,7 @@ jobs:
 
       - name: Upload application jar artifact
         if: matrix.os == 'ubuntu-22.04'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.artifact_parameters.outputs.artifact_name }}
           path: ${{ steps.artifact_parameters.outputs.artifact_path }}/petclinic-${{ steps.maven_version.outputs.version }}.jar
@@ -216,7 +216,7 @@ jobs:
   
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
   
     # connect to azure using AZURE_CREDENTIALS
     - name: Login to Azure
