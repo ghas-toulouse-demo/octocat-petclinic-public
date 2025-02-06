@@ -55,7 +55,7 @@ jobs:
         java: [ '17' ]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up JDK ${{matrix.java}}
         uses: actions/setup-java@v4
@@ -166,7 +166,7 @@ jobs:
       # Use Docker Layers to build the application
       # ideally we should use the jar from the build_and_test job
       - name: Setup Docker buildx
-        uses: docker/setup-buildx-action@v2.1.0
+        uses: docker/setup-buildx-action@v3
 
 
       - name: Docker metadata
@@ -177,7 +177,7 @@ jobs:
 
       - name: Sign in to GitHub Container Registry
         id: login_ghcr
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ github.actor }}
           password: ${{ github.token }}
@@ -185,7 +185,7 @@ jobs:
 
       - name: Build and push
         id: container_build_and_push
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
@@ -220,7 +220,7 @@ jobs:
   
     # connect to azure using AZURE_CREDENTIALS
     - name: Login to Azure
-      uses: azure/login@v1
+      uses: azure/login@v2
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
